@@ -90,8 +90,8 @@ def horario_sala(nueva_plani): # SUMA, ELIMINA DUPLICADOS DE BLOQUES, ACA SE DEB
 
 
 # lectura y union de archivos
-plani_202510=pd.read_excel("Plani_202510.xlsx")
-plani_202531=pd.read_excel("Plani_202531.xlsx")
+plani_202510=pd.read_excel("plani_202510.xlsx")
+plani_202531=pd.read_excel("plani_202531.xlsx")
 plani_union=pd.concat([plani_202510,plani_202531],axis=0).reset_index()
 
 
