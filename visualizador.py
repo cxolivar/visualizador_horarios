@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Mar 10 08:53:12 2025
-
-@author: Carmen
-"""
-
 import pandas as pd
 import numpy as np
 import streamlit as st
@@ -87,23 +80,28 @@ def horario_sala(nueva_plani): # SUMA, ELIMINA DUPLICADOS DE BLOQUES, ACA SE DEB
 
 
 ###############################################################################################
+@st.cache_data
+def lectura():
+
+    # lectura y union de archivos
+    plani_202510=pd.read_excel("Plani_202510.xlsx")
+    plani_202531=pd.read_excel("Plani_202531.xlsx")
+    plani_union=pd.concat([plani_202510,plani_202531],axis=0).reset_index()
+    
+    
+    
+    a=plani_union[plani_union["NRC"]==10212]
+    aa=armado_columna_bloques(a)
+    
+    # se agregan los bloques de horarios
+    nueva_plani=armado_columna_bloques(plani_union)
+    # datos utiles
+    
+    plani=nueva_plani[["CODIGO_PERIODO","PROGRAMA","NIVEL","NRC","MATERIA","CURSO","TITULO","SEDE","TIPO_HORARIO","INSCRITOS","LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","BLOQUES_HORARIOS"]]
+
+    return plani
 
 
-# lectura y union de archivos
-plani_202510=pd.read_excel("plani_202510.xlsx")
-plani_202531=pd.read_excel("plani_202531.xlsx")
-plani_union=pd.concat([plani_202510,plani_202531],axis=0).reset_index()
-
-
-
-a=plani_union[plani_union["NRC"]==10212]
-aa=armado_columna_bloques(a)
-
-# se agregan los bloques de horarios
-nueva_plani=armado_columna_bloques(plani_union)
-# datos utiles
-
-plani=nueva_plani[["CODIGO_PERIODO","PROGRAMA","NIVEL","NRC","MATERIA","CURSO","TITULO","SEDE","TIPO_HORARIO","INSCRITOS","LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","BLOQUES_HORARIOS"]]
 
 # plani.to_excel("plani_base.xlsx")
 
@@ -115,13 +113,11 @@ plani=nueva_plani[["CODIGO_PERIODO","PROGRAMA","NIVEL","NRC","MATERIA","CURSO","
 # cursos["CURSO"]=cursos["CURSO"].astype(str)
 # cursos["llave"]=cursos["NRC"]+"-"+cursos["MATERIA"]+"_"+cursos["CURSO"]+"-"+cursos["TITULO"]
 
+periodo=202510
+sede="TA"
+nrc=10036
 
-periodo=202531
-nrc=10384
-sede="PR"
-
-
-def calendario_fun(per,se,n):
+def calendario_fun(per,se,n,plani):
     
     
     periodo=per
@@ -188,24 +184,24 @@ def calendario_fun(per,se,n):
     
     if not 0 in lunes_bloq:
         for b in lunes_bloq:
-            calendario.loc[b, "LUNES"] = "CLASES" 
+            calendario.loc[b-1, "LUNES"] = "CLASES" 
             
     if not 0 in martes_bloq:
         for b in martes_bloq:
-            calendario.loc[b, "MARTES"] = "CLASES"        
+            calendario.loc[b-1, "MARTES"] = "CLASES"        
     
     if not 0 in miercoles_bloq:
         for b in miercoles_bloq:
-            calendario.loc[b, "MIERCOLES"] = "CLASES"
+            calendario.loc[b-1, "MIERCOLES"] = "CLASES"
     
     if not 0 in jueves_bloq:
         for b in jueves_bloq:
-            calendario.loc[b, "JUEVES"] = "CLASES"
+            calendario.loc[b-1, "JUEVES"] = "CLASES"
     
     
     if not 0 in viernes_bloq:
         for b in viernes_bloq:
-            calendario.loc[b, "VIERNES"] = "CLASES"
+            calendario.loc[b-1, "VIERNES"] = "CLASES"
             
             
             
@@ -213,13 +209,27 @@ def calendario_fun(per,se,n):
 
 
     
-aaaa=calendario_fun(202531, "PR", 10384)
+# aaaa=calendario_fun(202510, "TA", 10009,plani)
 
 
-# Ejemplo de uso en Streamlit
+
+
+
+
+
+
+
+
+
+
+
+# Ejemplo de uso en 
+
+plani=lectura()
 def main():
     
-    st.title("Visualizador de Horarios UAutonoma")    
+    st.title("Visualizador de Horarios UAutonoma") 
+    
     
     periodos=plani["CODIGO_PERIODO"].drop_duplicates()
     periodo=st.selectbox("Eliga el periodo",periodos)    
@@ -244,7 +254,7 @@ def main():
     
     st.write(nrc)
     
-    cal=calendario_fun(periodo,sede,nrc)
+    cal=calendario_fun(periodo,sede,nrc,plani)
     st.dataframe(cal,hide_index=True,height=770)
     
 
@@ -254,11 +264,6 @@ if __name__ == '__main__':
         
         
         
-
-
-
-
-
 
 
 
