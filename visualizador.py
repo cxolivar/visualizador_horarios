@@ -90,14 +90,14 @@ def lectura():
     
     
     
-    a=plani_union[plani_union["NRC"]==10212]
-    aa=armado_columna_bloques(a)
+    # a=plani_union[plani_union["NRC"]==10212]
+    # aa=armado_columna_bloques(a)
     
     # se agregan los bloques de horarios
     nueva_plani=armado_columna_bloques(plani_union)
     # datos utiles
     
-    plani=nueva_plani[["CODIGO_PERIODO","PROGRAMA","NIVEL","NRC","MATERIA","CURSO","TITULO","SEDE","TIPO_HORARIO","INSCRITOS","LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","BLOQUES_HORARIOS"]]
+    plani=nueva_plani[["CODIGO_PERIODO","PROGRAMA","NIVEL","NRC","MATERIA","CURSO","TITULO","SEDE","TIPO_HORARIO","INSCRITOS","LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","BLOQUES_HORARIOS","FACULTAD"]]
 
     return plani
 
@@ -118,6 +118,8 @@ sede="TA"
 nrc=10036
 
 def calendario_fun(per,se,n,plani):
+    
+    
     periodo=per
     sede=se
     nrc=n
@@ -205,6 +207,7 @@ def calendario_fun(per,se,n,plani):
             
     return calendario
 
+
     
 # aaaa=calendario_fun(202510, "TA", 10009,plani)
 
@@ -283,10 +286,23 @@ def main():
 if __name__ == '__main__':
     main()
 
-    
+        
+        
+        
 
-        
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
