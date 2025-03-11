@@ -118,9 +118,7 @@ sede="TA"
 nrc=10036
 
 def calendario_fun(per,se,n,plani):
-    
-    
-    periodo=per
+        periodo=per
     sede=se
     nrc=n
     
@@ -172,7 +170,7 @@ def calendario_fun(per,se,n,plani):
     
     
     calendario=pd.DataFrame()
-    calendario["Bloques"]=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
+    calendario["Bloques"]=["8:00-8:40","8:40-9:20","9:30-10:09","10:10-10:50","11:00-11:39","11:40-12:20","12:30-13:09","13:10-13:50","14:00-14:39","14:40-15:20","15:30-16:09","16:10-16:50","17:00-17:39","17:40-18:20","18:30-19:09","19:10-19:50","20:00-20:39","20:40-21:20","21:30-22:09","22:10-22:49","22:50-23:30"]
     calendario["LUNES"]=["","","","","","","","","","","","","","","","","","","","",""]
     calendario["MARTES"]=["","","","","","","","","","","","","","","","","","","","",""]
     calendario["MIERCOLES"]=["","","","","","","","","","","","","","","","","","","","",""]
@@ -207,7 +205,6 @@ def calendario_fun(per,se,n,plani):
             
     return calendario
 
-
     
 # aaaa=calendario_fun(202510, "TA", 10009,plani)
 
@@ -230,29 +227,54 @@ def main():
     
     st.title("Visualizador de Horarios UAutonoma") 
     
+    col1,col2,col3=st.columns(3)
     
-    periodos=plani["CODIGO_PERIODO"].drop_duplicates()
-    periodo=st.selectbox("Eliga el periodo",periodos)    
-    plani_filtros=plani[plani["CODIGO_PERIODO"]==periodo]
+    with col1:
+        periodos=plani["CODIGO_PERIODO"].drop_duplicates()
+        periodo=st.selectbox("1- Periodo",periodos)    
+        plani_filtros=plani[plani["CODIGO_PERIODO"]==periodo]
+        
+  
+        sedes=plani_filtros["SEDE"].drop_duplicates()
+        sede=st.selectbox("2- Sede",sedes)
+        plani_filtros=plani_filtros[plani_filtros["SEDE"]==sede]            
+        
+
     
+    with col2:
+
+        
+      
+
+        
+        facultades=plani_filtros["FACULTAD"].drop_duplicates()
+        facultad=st.selectbox("3- Facultad:",facultades)
+        plani_filtros=plani_filtros[plani_filtros["FACULTAD"]==facultad]        
+ 
     
+      
+    with col3:
+        
+        carreras=plani_filtros["PROGRAMA"].drop_duplicates()
+        carrera=st.selectbox("4- Carrera:",carreras)
+        plani_filtros=plani_filtros[plani_filtros["PROGRAMA"]==carrera]  
+        
     
-    sedes=plani_filtros["SEDE"].drop_duplicates()
-    sede=st.selectbox("Eliga la sede",sedes)
-    plani_filtros=plani_filtros[plani_filtros["SEDE"]==sede]
+    st.divider()
     
     cursos=plani_filtros[["NRC","MATERIA","CURSO","TITULO"]].drop_duplicates()
     cursos["NRC"]=cursos["NRC"].astype(str)
     cursos["CURSO"]=cursos["CURSO"].astype(str)
-    
     cursos["llave"]=cursos["NRC"]+"--"+cursos["TITULO"]+"  ("+(cursos["MATERIA"]+cursos["CURSO"])+")"
+    selector_curso=st.selectbox("5- Curso",cursos["llave"])
+        
+        
 
-    selector_curso=st.selectbox("Eliga el curso",cursos["llave"])
 
     nrc=selector_curso[:5]
     
     
-    st.write(nrc)
+    # st.write(nrc)
     
     cal=calendario_fun(periodo,sede,nrc,plani)
     st.dataframe(cal,hide_index=True,height=770)
@@ -261,7 +283,8 @@ def main():
 if __name__ == '__main__':
     main()
 
-        
+    
+
         
         
 
