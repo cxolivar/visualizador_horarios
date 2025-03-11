@@ -118,7 +118,7 @@ sede="TA"
 nrc=10036
 
 def calendario_fun(per,se,n,plani):
-        periodo=per
+    periodo=per
     sede=se
     nrc=n
     
